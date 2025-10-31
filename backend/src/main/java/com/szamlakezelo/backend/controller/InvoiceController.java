@@ -41,6 +41,7 @@ public class InvoiceController {
     }
 
     //3. szamla letrehozasa, csak admin es konvvelo
+    // POST /api/invoices/create
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN') or hasRole('BOOKKEEPER')")
     public ResponseEntity<Invoice> createInvoice(@RequestBody @Valid InvoiceCreationDto invoice) {

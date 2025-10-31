@@ -116,7 +116,7 @@ public class AuthService {
         return userRepository.save(user);
     }
 
-    public UserDto mapToUserDto(User user) {
+    public static UserDto mapToUserDto(User user) {
         UserDto dto = new UserDto();
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
