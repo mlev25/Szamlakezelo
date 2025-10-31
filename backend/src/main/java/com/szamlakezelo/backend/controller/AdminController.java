@@ -1,17 +1,14 @@
 package com.szamlakezelo.backend.controller;
 
-import com.szamlakezelo.backend.data.model.Role;
 import com.szamlakezelo.backend.dto.RoleUpdateDto;
 import com.szamlakezelo.backend.dto.UserDto;
 import com.szamlakezelo.backend.service.AdminService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 //csak az admin erheti el az egesz endpointot
 @RestController
