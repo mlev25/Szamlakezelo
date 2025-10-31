@@ -1,4 +1,4 @@
-package com.szamlakezelo.backend.model;
+package com.szamlakezelo.backend.data.model;
 
 import com.szamlakezelo.backend.util.RoleName;
 import jakarta.persistence.*;

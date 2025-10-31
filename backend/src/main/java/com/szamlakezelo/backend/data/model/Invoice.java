@@ -1,4 +1,4 @@
-package com.szamlakezelo.backend.model;
+package com.szamlakezelo.backend.data.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
