@@ -1,5 +1,6 @@
 package com.szamlakezelo.backend.service;
 
+import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.szamlakezelo.backend.dto.LoginRequest;
 import com.szamlakezelo.backend.dto.RegisterRequest;
 import com.szamlakezelo.backend.data.model.Role;
@@ -11,7 +12,9 @@ import com.szamlakezelo.backend.security.UserPrincipal;
 import com.szamlakezelo.backend.security.JwtUtils;
 import com.szamlakezelo.backend.util.RoleName;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -34,27 +37,44 @@ public class AuthService {
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
 
+    private final DefaultKaptcha captchaProducer;
+
     public AuthService(AuthenticationManager authenticationManager, UserRepository userRepository,
-                       RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
+                       RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils, DefaultKaptcha captchaProducer) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
+        this.captchaProducer = captchaProducer;
     }
 
 
-    public String authenticateUser(LoginRequest loginRequest) {
+    public String authenticateUser(LoginRequest loginRequest, HttpServletRequest request) {
+
+        User user = userRepository.findByUsername(loginRequest.getUsername());
+        final int CAPTCHA_LIMIT = 3;
+
+        if (user != null && user.getFailedLoginAttempts() >= CAPTCHA_LIMIT) {
+
+            String expectedCaptcha = (String) request.getSession().getAttribute("captchaCode");
+
+            if (expectedCaptcha == null || !expectedCaptcha.equalsIgnoreCase(loginRequest.getCaptchaAnswer())) {
+
+                handleLoginFailure(user);
+                throw new BadCredentialsException("CAPTCHA ellenorzes sikertelen.");
+            }
+        }
 
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-            if (userRepository.existsByUsername(loginRequest.getUsername())) {
-                User user =  userRepository.findByUsername(loginRequest.getUsername());
-                user.setFailedLoginAttempts(0);
-                user.setLastLoginDate(new Date());
-                userRepository.save(user);
+            if (user != null) {
+                handleLoginSuccess(user);
+            } else {
+                user = userRepository.findByUsername(loginRequest.getUsername());
+                if (user != null) handleLoginSuccess(user);
             }
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -62,16 +82,52 @@ public class AuthService {
             return jwtUtils.generateJwtToken((UserPrincipal) authentication.getPrincipal());
 
         } catch (AuthenticationException e) {
-            if (userRepository.existsByUsername(loginRequest.getUsername())) {
-                User user =  userRepository.findByUsername(loginRequest.getUsername());
-                user.setFailedLoginAttempts(user.getFailedLoginAttempts() + 1);
-                userRepository.save(user);
+
+            if (user != null) {
+                handleLoginFailure(user);
+            } else if (userRepository.existsByUsername(loginRequest.getUsername())) {
+                User failedUser =  userRepository.findByUsername(loginRequest.getUsername());
+                handleLoginFailure(failedUser);
             }
 
             throw e;
         }
+//        try {
+//            Authentication authentication = authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+//
+//            if (userRepository.existsByUsername(loginRequest.getUsername())) {
+//                User user =  userRepository.findByUsername(loginRequest.getUsername());
+//                user.setFailedLoginAttempts(0);
+//                user.setLastLoginDate(new Date());
+//                userRepository.save(user);
+//            }
+//
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//            return jwtUtils.generateJwtToken((UserPrincipal) authentication.getPrincipal());
+//
+//        } catch (AuthenticationException e) {
+//            if (userRepository.existsByUsername(loginRequest.getUsername())) {
+//                User user =  userRepository.findByUsername(loginRequest.getUsername());
+//                user.setFailedLoginAttempts(user.getFailedLoginAttempts() + 1);
+//                userRepository.save(user);
+//            }
+//
+//            throw e;
+//        }
     }
 
+    private void handleLoginFailure(User user) {
+        user.setFailedLoginAttempts(user.getFailedLoginAttempts() + 1);
+        userRepository.save(user);
+    }
+
+    private void handleLoginSuccess(User user) {
+        user.setFailedLoginAttempts(0);
+        user.setLastLoginDate(new Date());
+        userRepository.save(user);
+    }
 
     public User registerUser(RegisterRequest signUpRequest) {
 

@@ -10,4 +10,6 @@ public class LoginRequest {
 
     @NotBlank(message = "A jelszó nem lehet üres.")
     private String password;
+
+    private String captchaAnswer;
 }
