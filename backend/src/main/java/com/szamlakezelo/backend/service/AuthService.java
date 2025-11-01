@@ -34,7 +34,6 @@ public class AuthService {
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
 
-    // Konstruktor injektálás: FÜGGŐSÉG BEFECSKENDEZÉS
     public AuthService(AuthenticationManager authenticationManager, UserRepository userRepository,
                        RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
@@ -44,11 +43,7 @@ public class AuthService {
         this.jwtUtils = jwtUtils;
     }
 
-    /**
-     * Hitelesíti a felhasználót, beállítja a Security Context-et, és generálja a JWT-t.
-     * @param loginRequest A bejelentkezési adatok (username, password).
-     * @return A generált JWT Token.
-     */
+
     public String authenticateUser(LoginRequest loginRequest) {
 
         try {
@@ -77,33 +72,25 @@ public class AuthService {
         }
     }
 
-    /**
-     * Regisztrál egy új felhasználót és elmenti az adatbázisba.
-     * @param signUpRequest A regisztrációs adatok (name, username, password, role).
-     * @return Az újonnan létrehozott User entitás.
-     */
+
     public User registerUser(RegisterRequest signUpRequest) {
 
-        // 1. Ellenőrizzük, hogy a felhasználónév foglalt-e
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             throw new RuntimeException("Error: A felhasználónév már foglalt!");
         }
 
-        // 2. Új User entitás létrehozása és a jelszó titkosítása
         User user = new User();
         user.setName(signUpRequest.getName());
         user.setUsername(signUpRequest.getUsername());
-        user.setPassword(encoder.encode(signUpRequest.getPassword())); // Jelszó hashelése
+        user.setPassword(encoder.encode(signUpRequest.getPassword()));
 
-        // 3. Szerepkörök beállítása (Role hozzárendelés)
         Set<Role> roles = new HashSet<>();
         String strRole = signUpRequest.getRole().toUpperCase();
 
         RoleName roleName;
         try {
-            roleName = RoleName.valueOf(strRole); // Konvertálás Enum-ra
+            roleName = RoleName.valueOf(strRole);
         } catch (IllegalArgumentException e) {
-            // Ha a megadott szerepkör nem létezik (pl. "ADMINISTRATOR" helyett "admin")
             throw new RuntimeException("Error: A szerepkör nem létezik: " + strRole);
         }
 
@@ -112,7 +99,6 @@ public class AuthService {
         roles.add(userRole);
         user.setRoles(roles);
 
-        // 4. Mentés az adatbázisba
         return userRepository.save(user);
     }
 
@@ -122,7 +108,6 @@ public class AuthService {
         dto.setUsername(user.getUsername());
         dto.setName(user.getName());
 
-        // Szerepkörök String listává alakítása
         List<String> roleNames = user.getRoles().stream()
                 .map(role -> role.getName().name())
                 .collect(Collectors.toList());

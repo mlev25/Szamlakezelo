@@ -61,7 +61,7 @@ public class AdminService {
     }
 
 
-    //2. szerepkor hozzaadasa
+    //2. szerepkor hozzaadasa, vegul nem ez kell sztem, hanem a full feluliras
 //    public UserDto addRoleToUser(Long userId, RoleName roleName){
 //        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 //

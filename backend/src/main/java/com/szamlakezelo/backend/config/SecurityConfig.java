@@ -36,7 +36,7 @@ public class SecurityConfig {
         return (request, response, accessDeniedException) -> {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403
             response.setContentType("application/json");
-            response.getWriter().write("{ \"status\": 403, \"error\": \"Forbidden\", \"message\": \"Nincs jogosultsága a kért művelet elvégzéséhez.\" }");
+            response.getWriter().write("{ \"status\": 403, \"error\": \"Forbidden\", \"message\": \"Nincc jogosultsag a kert muvelet elvegzesehez!\" }");
         };
     }
 
@@ -45,9 +45,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception
-                        // 401 Unauthorized (JWT hiba, lejárt, hiányzó token)
                         .authenticationEntryPoint(unauthorizedHandler)
-                        // 403 Forbidden (Van token, de nincs jogosultság - Pl. Bookkeeper próbál Admin lenni)
                         .accessDeniedHandler(accessDeniedHandler())
                 )
                 .authorizeHttpRequests(auth -> auth

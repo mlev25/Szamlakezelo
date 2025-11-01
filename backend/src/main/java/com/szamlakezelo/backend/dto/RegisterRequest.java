@@ -6,19 +6,16 @@ import lombok.Data;
 
 @Data
 public class RegisterRequest {
-    @NotBlank(message = "A név kötelező.")
+    @NotBlank(message = "A nev kotelezo.")
     private String name;
 
-    @NotBlank(message = "A felhasználónév kötelező.")
+    @NotBlank(message = "A felhasznalonev kotelezo.")
     private String username;
 
-    // Erősebb jelszó szabály
-    @NotBlank(message = "A jelszó kötelező.")
-    @Size(min = 6, message = "A jelszónak legalább 6 karakter hosszúnak kell lennie.")
+    @NotBlank(message = "A jelszo kotelezo.")
+    @Size(min = 6, message = "A jelszo legalabb 6 karakter hosszu.")
     private String password;
 
-    // A szerepkör neve (pl. USER, BOOKKEEPER), amit választott.
-    // Figyelem: A Controllerben ellenőrizzük, hogy ez csak nem-Admin szerepkör lehet!
-    @NotBlank(message = "A szerepkör kötelező.")
+    @NotBlank(message = "Kotelezo a szerepkor.")
     private String role;
 }
