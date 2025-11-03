@@ -8,6 +8,7 @@ import com.szamlakezelo.backend.data.model.User;
 import com.szamlakezelo.backend.data.repository.RoleRepository;
 import com.szamlakezelo.backend.data.repository.UserRepository;
 import com.szamlakezelo.backend.dto.UserDto;
+import com.szamlakezelo.backend.exception.CaptchaRequiredException;
 import com.szamlakezelo.backend.security.UserPrincipal;
 import com.szamlakezelo.backend.security.JwtUtils;
 import com.szamlakezelo.backend.util.RoleName;
@@ -51,47 +52,85 @@ public class AuthService {
 
 
     public String authenticateUser(LoginRequest loginRequest, HttpServletRequest request) {
-
         User user = userRepository.findByUsername(loginRequest.getUsername());
         final int CAPTCHA_LIMIT = 3;
 
         if (user != null && user.getFailedLoginAttempts() >= CAPTCHA_LIMIT) {
-
             String expectedCaptcha = (String) request.getSession().getAttribute("captchaCode");
-
             if (expectedCaptcha == null || !expectedCaptcha.equalsIgnoreCase(loginRequest.getCaptchaAnswer())) {
-
                 handleLoginFailure(user);
-                throw new BadCredentialsException("CAPTCHA ellenorzes sikertelen.");
+                throw new CaptchaRequiredException("CAPTCHA ellenorzes sikertelen.");
             }
+            request.getSession().removeAttribute("captchaCode");
         }
 
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
-            if (user != null) {
-                handleLoginSuccess(user);
-            } else {
-                user = userRepository.findByUsername(loginRequest.getUsername());
-                if (user != null) handleLoginSuccess(user);
+            User authenticatedUser = userRepository.findByUsername(loginRequest.getUsername());
+            if (authenticatedUser != null) {
+                handleLoginSuccess(authenticatedUser);
             }
-
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
             return jwtUtils.generateJwtToken((UserPrincipal) authentication.getPrincipal());
-
         } catch (AuthenticationException e) {
 
-            if (user != null) {
-                handleLoginFailure(user);
-            } else if (userRepository.existsByUsername(loginRequest.getUsername())) {
-                User failedUser =  userRepository.findByUsername(loginRequest.getUsername());
+            User failedUser = userRepository.findByUsername(loginRequest.getUsername());
+
+            if (failedUser != null) {
                 handleLoginFailure(failedUser);
+
+                if (failedUser.getFailedLoginAttempts() >= CAPTCHA_LIMIT) {
+                    throw new CaptchaRequiredException("Túl sok sikertelen próbálkozás, CAPTCHA szukseges.");
+                }
             }
 
             throw e;
         }
+    }
+
+//    public String authenticateUser(LoginRequest loginRequest, HttpServletRequest request) {
+//
+//        User user = userRepository.findByUsername(loginRequest.getUsername());
+//        final int CAPTCHA_LIMIT = 3;
+//
+//        if (user != null && user.getFailedLoginAttempts() >= CAPTCHA_LIMIT) {
+//
+//            String expectedCaptcha = (String) request.getSession().getAttribute("captchaCode");
+//
+//            if (expectedCaptcha == null || !expectedCaptcha.equalsIgnoreCase(loginRequest.getCaptchaAnswer())) {
+//
+//                handleLoginFailure(user);
+//                throw new BadCredentialsException("CAPTCHA ellenorzes sikertelen.");
+//            }
+//        }
+//
+//        try {
+//            Authentication authentication = authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+//
+//            if (user != null) {
+//                handleLoginSuccess(user);
+//            } else {
+//                user = userRepository.findByUsername(loginRequest.getUsername());
+//                if (user != null) handleLoginSuccess(user);
+//            }
+//
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//            return jwtUtils.generateJwtToken((UserPrincipal) authentication.getPrincipal());
+//
+//        } catch (AuthenticationException e) {
+//
+//            if (user != null) {
+//                handleLoginFailure(user);
+//            } else if (userRepository.existsByUsername(loginRequest.getUsername())) {
+//                User failedUser =  userRepository.findByUsername(loginRequest.getUsername());
+//                handleLoginFailure(failedUser);
+//            }
+//
+//            throw e;
+//        }
 //        try {
 //            Authentication authentication = authenticationManager.authenticate(
 //                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -116,7 +155,7 @@ public class AuthService {
 //
 //            throw e;
 //        }
-    }
+// }
 
     private void handleLoginFailure(User user) {
         user.setFailedLoginAttempts(user.getFailedLoginAttempts() + 1);
