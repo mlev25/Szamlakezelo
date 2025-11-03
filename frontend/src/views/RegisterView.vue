@@ -20,7 +20,7 @@
         <label for="password">Jelszó</label>
         <input type="password" id="password" v-model="password" required minlength="8">
         <small v-if="password.length > 0 && password.length < 6" class="validation-error">A jelszónak legalább 6 karakter hosszúnak kell lennie.</small>
-        <small v-if="password.length >= 8 && !isPasswordStrong" class="validation-error">A jelszónak tartalmaznia kell kisbetűt, nagybetűt és számot is.</small>
+        <small v-if="password.length >= 6 && !isPasswordStrong" class="validation-error">A jelszónak tartalmaznia kell kisbetűt, nagybetűt és számot is.</small>
       </div>
 
       <div class="form-group">

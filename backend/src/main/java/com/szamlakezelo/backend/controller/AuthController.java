@@ -22,7 +22,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -106,10 +108,29 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
 
-        User user = authService.registerUser(registerRequest);
-        UserDto userDto = authService.mapToUserDto(user);
-        return ResponseEntity.ok(userDto);
+//        User user = authService.registerUser(registerRequest);
+//        UserDto userDto = authService.mapToUserDto(user);
+//        return ResponseEntity.ok(userDto);
+
+        try {
+            User user = authService.registerUser(registerRequest);
+            UserDto userDto = authService.mapToUserDto(user);
+
+            return ResponseEntity.ok(userDto);
+
+        } catch (RuntimeException ex) {
+
+            if (ex.getMessage().contains("A felhasználónév már foglalt!")) {
+
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("message", ex.getMessage());
+
+                return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+            }
+
+            return new ResponseEntity<>("Ismeretlen hiba: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
