@@ -78,7 +78,6 @@ const handleLogin = async () => {
   const loginData = {
     username: username.value,
     password: password.value,
-    // CSAK akkor küldjük a captchaAnswer-t, ha van kép megjelenítve (ez a backend logikáját követi)
     captchaAnswer: captchaAnswer.value
   };
 
@@ -92,6 +91,7 @@ const handleLogin = async () => {
             username: response.data.username,
             name: response.data.name,
             id: response.data.id,
+            lastLoginDate: response.data.lastLoginDate
         };
 
         // Pinia Store frissítése

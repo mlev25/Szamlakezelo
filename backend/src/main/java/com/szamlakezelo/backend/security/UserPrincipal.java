@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,8 @@ public class UserPrincipal implements UserDetails, Serializable {
     private String name;
     private String username;
     private String password;
+    @Getter
+    private Date lastLoginDate;
     private Set<? extends GrantedAuthority> authorities;
 
     public UserPrincipal(User user) {
@@ -30,6 +33,7 @@ public class UserPrincipal implements UserDetails, Serializable {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.name = user.getName();
+        this.lastLoginDate = user.getLastLoginDate();
         this.authorities = user.getRoles().stream()
                 .map(Role::getName)
                 .map(Enum::name)

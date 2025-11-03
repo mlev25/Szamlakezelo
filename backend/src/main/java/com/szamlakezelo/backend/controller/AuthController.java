@@ -54,6 +54,7 @@ public class AuthController {
                     userPrincipal.getId(),
                     userPrincipal.getUsername(),
                     userPrincipal.getName(),
+                    userPrincipal.getLastLoginDate(),
                     roles));
 
         } catch (CaptchaRequiredException e) {
@@ -108,11 +109,7 @@ public class AuthController {
     public ResponseEntity<UserDto> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
 
         User user = authService.registerUser(registerRequest);
-
-        // 2. Konvertálás a publikus UserDto-ra
         UserDto userDto = authService.mapToUserDto(user);
-
-        // 3. Visszatérés a UserDto-val (JSON formátumban)
         return ResponseEntity.ok(userDto);
     }
 }
