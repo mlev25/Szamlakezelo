@@ -5,6 +5,8 @@ import RegisterView from '@/views/RegisterView.vue';
 import DashboardView from '@/views/DashboardView.vue';
 import AdminView from '@/views/AdminView.vue';
 import ForbiddenView from '@/views/ForbiddenView.vue';
+import InvoiceListView from '@/views/InvoiceListView.vue';
+import InvoiceDetailView from '@/views/InvoiceDetailView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +34,20 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: DashboardView,
+      meta: { requiresAuth: true }
+    },
+
+    {
+      path: '/invoices',
+      name: 'invoiceList',
+      component: InvoiceListView,
+      meta: { requiresAuth: true }
+    },
+
+    {
+      path: '/invoices/:id',
+      name: 'invoiceDetails',
+      component: InvoiceDetailView,
       meta: { requiresAuth: true }
     },
 
