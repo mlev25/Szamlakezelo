@@ -7,11 +7,13 @@
       <div class="form-group">
         <label for="username">Felhasználónév</label>
         <input type="text" id="username" v-model="username" required placeholder="UjFelhasznalo25">
+        <small v-if="username.length > 0 && username.length < 4" class="validation-error">A felhasználónév legalább 4 karakter hosszú.</small>
       </div>
 
       <div class="form-group">
         <label for="password">Jelszó</label>
         <input type="password" id="password" v-model="password" required placeholder="ErosJelszo11">
+        <small v-if="password.length > 0 && password.length < 6" class="validation-error">A jelszó legalább 6 karakter hosszú.</small>
       </div>
 
       <div v-if="captchaImage" class="captcha-group">
@@ -45,7 +47,7 @@ const router = useRouter();
 const authStore = useAuthStore();
 
 const isFormValid = computed(() => {
-  const baseValid = username.value.trim() !== '' && password.value.trim() !== '';
+  const baseValid = username.value.trim() !== '' && password.value.trim() !== '' && username.value.length >= 4 && password.value.length >= 6;
 
   if (captchaImage.value) {
     return baseValid && captchaAnswer.value.trim() !== '';
@@ -139,4 +141,9 @@ button:hover:not(.disabled-button){
   background-color: lightblue;
 }
 
+.validation-error { color: #dc3545;
+  font-size: 0.85em;
+  display: block;
+  margin-top: 5px;
+}
 </style>
