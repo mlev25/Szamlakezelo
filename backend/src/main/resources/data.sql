@@ -1,7 +1,5 @@
 -- --------------------------------------------------------------------------------
--- 1. ADATOK TÖRLÉSE (Tiszta Lap Induláshoz)
--- Minden indításkor memóriában fut a H2, de a H2 beágyazott adatbázis megjegyzi a kapcsolatokat,
--- ezért a törlést fordított sorrendben kell végezni a külföldi kulcsok miatt.
+-- 1. Adatok torlese minden inditasnal, tiszta indulas vegett
 -- --------------------------------------------------------------------------------
 
 DELETE FROM user_roles;
@@ -10,8 +8,7 @@ DELETE FROM users;
 DELETE FROM invoices;
 
 -- --------------------------------------------------------------------------------
--- 2. SZEREPKÖRÖK LÉTREHOZÁSA (ROLE)
--- A Role tábla name oszlopa string enumerációt tárol: 'ROLE_ADMINISTRATOR', 'ROLE_BOOKKEEPER', 'ROLE_USER'.
+-- 2. Szerepkorok letrehozasa
 -- --------------------------------------------------------------------------------
 
 INSERT INTO roles (id, name, description) VALUES
@@ -20,9 +17,10 @@ INSERT INTO roles (id, name, description) VALUES
                                               (3, 'USER', 'Csak számlák és műszerfal megtekintése.');
 
 -- --------------------------------------------------------------------------------
--- 3. FELHASZNÁLÓK LÉTREHOZÁSA (USER)
--- Minden felhasználóhoz meg kell adni a kötelező mezőket.
--- JELSZÓ: Mindegyik felhasználó jelszava "password123", BCrypt-tel hashelve: $2a$10$T8T/rO9s/o7pC7d5z2Q3R.D7i0Fh6t1yX0Y5zX.s3X/X2xX3J2X1X2 (Csak teszteléshez!)
+-- 3. Letrehozni felhasznalokat, eleve a hashelt jelszokat kell beallitani
+-- user - testUser1pass
+-- konyvelo - testBk1pass
+-- admin - adminpass1
 -- --------------------------------------------------------------------------------
 
 INSERT INTO users (id, name, username, password, failed_login_attempts) VALUES
@@ -31,10 +29,7 @@ INSERT INTO users (id, name, username, password, failed_login_attempts) VALUES
                                                                             (3, 'Teszt Felhasználó', 'user', '$2a$10$/4hX/02rlMBwrQaEkZDdj.FENZDKRLBTnK4QVKd.SE/3aLMz9gIzm', 0);
 
 -- --------------------------------------------------------------------------------
--- 4. KAPCSOLÓTÁBLA (user_roles) FELTÖLTÉSE (ManyToMany)
--- Felhasználó 1 (admin) -> ROLE_ADMINISTRATOR (1)
--- Felhasználó 2 (konyvelo) -> ROLE_BOOKKEEPER (2)
--- Felhasználó 3 (user) -> ROLE_USER (3)
+-- 4. Kapcsolotabla feltoltese a felhasznalok es szerepkoreik kozott
 -- --------------------------------------------------------------------------------
 
 INSERT INTO user_roles (user_id, role_id) VALUES
@@ -43,17 +38,16 @@ INSERT INTO user_roles (user_id, role_id) VALUES
                                               (3, 3);
 
 -- --------------------------------------------------------------------------------
--- 5. SZÁMLÁK LÉTREHOZÁSA (INVOICE)
+-- 5. nehany szamla letrehozasa
 -- --------------------------------------------------------------------------------
 
 INSERT INTO invoices (id, customer_name, issue_date, due_date, item_name, comment, price) VALUES
                                                                                               (1, 'Bíráló Tanár Zrt.', '2025-10-05', '2025-11-04', 'Rendszerfejlesztés', 'Adminisztrációs és számlakezelő modul', 750000.00),
                                                                                               (2, 'Teszt Ügyfél Kft.', '2025-10-18', '2025-11-17', 'Licenc díj', 'Éves szoftverhasználati licenc díj', 25000.00);
 
+-- 6. beallitasa az ID-nak hogy ne eggyel kezdje megint ha ujat adunk hozza ezzel exceptiont elkerulve
 ALTER TABLE users ALTER COLUMN id RESTART WITH 4;
 
--- Állítsa be a szerepkörök tábla ID számlálóját (3+1=4)
 ALTER TABLE roles ALTER COLUMN id RESTART WITH 4;
 
--- Állítsa be a számlák tábla ID számlálóját (2+1=3)
 ALTER TABLE invoices ALTER COLUMN id RESTART WITH 3;
