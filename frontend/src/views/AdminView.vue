@@ -117,7 +117,7 @@ const fetchUsers = async () => {
     const response = await apiClient.get('/admin/users');
     users.value = response.data;
   } catch (err) {
-    const message = err.response?.data?.message || 'Hiba a felhasználók lekérésekor. Nincs jogosultsága.';
+    const message = err.response?.data?.message || 'Hiba a felhasználók lekérésekor.';
     error.value = message;
     console.error("Admin API hiba:", err);
   } finally {
