@@ -3,7 +3,7 @@
     <h1>Adminisztrációs Panel</h1>
     <p class="role-info">Csak Adminisztrátorok számára elérhető tartalom.</p>
 
-    <h2>Felhasználók Kezelése</h2>
+    <h2>Felhasználók Kezelése (Saját jogosultságot és fiókot nem lehet törölni!)</h2>
 
     <p v-if="isLoading" class="loading-message">Felhasználói adatok betöltése...</p>
     <p v-else-if="error" class="error-message">{{ error }}</p>
@@ -215,9 +215,15 @@ onMounted(() => {
 <style scoped>
 .admin-container{
   background-color: rgb(240, 234, 204);
-  padding: 20px;
+  padding: 30px;
+  margin-right: 70px;
+  margin-left: 70px;
   border-radius: 1rem;
   border: 3px solid #c1c5c8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .user-table{
@@ -225,6 +231,7 @@ onMounted(() => {
   padding: 10px;
   border: 3px solid rgb(101, 100, 100);
   border-radius: 1rem;
+  max-width: 1000px;
 }
 
 

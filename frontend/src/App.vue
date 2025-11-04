@@ -5,6 +5,7 @@
         <router-link to="/dashboard">Főoldal</router-link>
         <router-link to="/invoices">Számlák</router-link>
         <router-link to="/admin" v-if="hasRole('ADMIN')">Admin Panel</router-link>
+        <span class="welcome-user">Üdv, <b>{{ authStore.userData?.username }}</b></span>
       </nav>
       <button @click="handleLogout" class="logout-button">Kilépés</button>
     </header>
@@ -167,5 +168,8 @@ button[type="submit"] {
 
 .source-link:hover{
   color: lightblue;
+}
+.welcome-user{
+  color: gold;
 }
 </style>
