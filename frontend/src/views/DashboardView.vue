@@ -5,8 +5,8 @@
     <p class="user-info">
       Bejelentkezve mint: <b>{{ authStore.userData?.username || 'N/A' }}</b>
       (Szerepkörök: <b>{{ authStore.userRoles.join(', ') }}</b>)
-      <span v-if="authStore.userData?.lastLoginDate"> | Utolsó belépés: {{ formatDate(authStore.userData?.lastLoginDate) }}</span>
-      <span v-else> | Utolsó belépés: Most vagy Ismeretlen</span>
+      <span v-if="authStore.userData?.lastLoginDate"> | Utolsó belépés: <b>{{ formatDate(authStore.userData?.lastLoginDate) }}</b></span>
+      <span v-else> | Utolsó belépés: Most/Ismeretlen</span>
     </p>
 
     <hr>
@@ -66,7 +66,7 @@ const formatDate = (dateString) => {
 .user-info {
   margin-top: 10px;
   padding: 10px;
-  background: #eef;
+  background: rgb(220, 220, 232);
   border-left: 5px solid #007bff;
   border-radius: 4px;
   font-size: 1.1em;
@@ -117,7 +117,7 @@ hr {
 }
 
 .success {
-  background-color: #e8f5e9;
+  background-color: #f8fca8;
   border: 1px solid #a5d6a7;
 }
 

@@ -208,6 +208,7 @@ public class AuthService {
                 .collect(Collectors.toList());
 
         dto.setRoles(roleNames);
+        dto.setLastLoginDate(user.getLastLoginDate());
         return dto;
     }
 }

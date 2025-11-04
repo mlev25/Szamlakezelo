@@ -88,7 +88,13 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.invoice-list-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+.invoice-list-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: rgb(235, 233, 233);
+  border-radius: 1rem;
+}
 .create-button {
     display: inline-block;
     padding: 10px 15px;
@@ -106,6 +112,7 @@ onMounted(() => {
   width: 100%;
   border-collapse: collapse;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: rgb(226, 210, 180);
 }
 .invoice-table th, .invoice-table td {
   padding: 12px 15px;

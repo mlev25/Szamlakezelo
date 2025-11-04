@@ -43,7 +43,7 @@
       </button>
     </form>
 
-    <router-link to="/login">Már van fiókja? Jelentkezzen be!</router-link>
+    <router-link to="/login" class="log-link">Már van fiókja? Jelentkezzen be!</router-link>
   </div>
 </template>
 
@@ -74,7 +74,7 @@ const isFormValid = computed(() => {
     return (
         name.value.trim().length > 0 &&
         username.value.trim().length >= 4 &&
-        password.value.trim().length >= 8 &&
+        password.value.trim().length >= 6 &&
         isPasswordStrong.value
     );
 });
@@ -129,6 +129,7 @@ const handleRegister = async () => {
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  background-color: rgb(225, 224, 224);
 }
 
 .form-group {
@@ -160,7 +161,7 @@ button {
 }
 
 .disabled-button {
-    background-color: #cccccc !important;
+    background-color: #6e6a6a !important;
     cursor: not-allowed !important;
     opacity: 0.6;
 }
@@ -185,5 +186,16 @@ button:hover:not(.disabled-button) {
   color: #28a745;
   font-weight: bold;
   margin-top: 15px;
+}
+
+.log-link{
+  text-decoration: none;
+  color: darkcyan;
+  padding: 2px;
+  border-radius: 0.3rem;
+}
+
+.log-link:hover{
+  background-color: lightblue;
 }
 </style>

@@ -6,6 +6,7 @@
       <div class="form-group">
         <label for="customerName">Vásárló neve</label>
         <input type="text" id="customerName" v-model="invoice.customerName" required>
+        <small v-if="customerNameError" class="validation-error">{{ customerNameError }}</small>
       </div>
 
       <div class="form-group date-group">
@@ -16,36 +17,46 @@
         <div class="date-field">
           <label for="dueDate">Esedékesség dátuma</label>
           <input type="date" id="dueDate" v-model="invoice.dueDate" required>
+          <small v-if="dueDateError" class="validation-error">{{ dueDateError }}</small>
         </div>
       </div>
 
       <div class="form-group">
         <label for="itemName">Tétel neve</label>
         <input type="text" id="itemName" v-model="invoice.itemName" required>
+        <small v-if="itemNameError" class="validation-error">{{ itemNameError }}</small>
       </div>
 
       <div class="form-group">
         <label for="price">Ár</label>
         <input type="number" id="price" v-model.number="invoice.price" required min="1">
+        <small v-if="priceError" class="validation-error">{{ priceError }}</small>
       </div>
 
       <div class="form-group">
         <label for="comment">Megjegyzés</label>
         <textarea id="comment" v-model="invoice.comment" required></textarea>
+        <small v-if="commentError" class="validation-error">{{ commentError }}</small>
       </div>
 
       <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
       <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
 
-      <button type="submit" :disabled="isLoading">
-        {{ isLoading ? 'Kiállítás...' : 'Számla kiállítása' }}
-      </button>
+      <div class="buttons">
+        <button type="submit" :disabled="!isFormValid || isLoading">
+          {{ isLoading ? 'Kiállítás...' : 'Számla kiállítása' }}
+        </button>
+        <button type="button" @click="router.back()" class="back-button">
+          &larr;  Vissza
+        </button>
+      </div>
+
     </form>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import apiClient from '@/utils/axios';
 
@@ -64,7 +75,57 @@ const errorMessage = ref('');
 const successMessage = ref('');
 const isLoading = ref(false);
 
+
+const minNameLength = 3;
+const minCommentLength = 5;
+const maxPrice = 99999999.99;
+
+const customerNameError = computed(() => {
+    if (invoice.value.customerName.trim().length === 0) return 'A vásárló neve kötelező.';
+    if (invoice.value.customerName.trim().length < minNameLength) return `A név legalább ${minNameLength} karakter kell legyen.`;
+    return '';
+});
+
+const itemNameError = computed(() => {
+    if (invoice.value.itemName.trim().length === 0) return 'A tétel neve kötelező.';
+    if (invoice.value.itemName.trim().length < minNameLength) return `A tételnév legalább ${minNameLength} karakter kell legyen.`;
+    return '';
+});
+
+const commentError = computed(() => {
+    if (invoice.value.comment.trim().length === 0) return 'A megjegyzés kötelező.';
+    if (invoice.value.comment.trim().length < minCommentLength) return `A megjegyzés legalább ${minCommentLength} karakter kell legyen.`;
+    return '';
+});
+
+const priceError = computed(() => {
+    if (invoice.value.price <= 0) return 'Az ár nem lehet nulla vagy negatív.';
+    if (invoice.value.price > maxPrice) return `Az ár túl magas (Maximum: ${maxPrice.toLocaleString('hu-HU')}).`;
+    return '';
+});
+
+const dueDateError = computed(() => {
+    if (!invoice.value.dueDate) return 'Az esedékesség dátuma kötelező.';
+
+    const issue = new Date(invoice.value.issueDate);
+    const due = new Date(invoice.value.dueDate);
+    issue.setHours(0, 0, 0, 0);
+    due.setHours(0, 0, 0, 0);
+
+    if (due < issue) return 'Az esedékesség nem lehet korábbi, mint a kiállítás dátuma.';
+    return '';
+});
+
+const isFormValid = computed(() => {
+  return customerNameError.value === '' &&
+         itemNameError.value === '' &&
+         commentError.value === '' &&
+         priceError.value === '' &&
+         dueDateError.value === '';
+});
+
 const handleCreateInvoice = async () => {
+  if (!isFormValid.value) return;
   errorMessage.value = '';
   successMessage.value = '';
   isLoading.value = true;
@@ -98,9 +159,9 @@ const handleCreateInvoice = async () => {
 <style scoped>
 .invoice-create-container {
   max-width: 600px;
-  margin: 30px auto;
+  margin: 20px auto;
   padding: 25px;
-  background-color: #f9f9f9;
+  background-color: #f5f5f5;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -148,7 +209,7 @@ h1 {
 button {
   width: 100%;
   padding: 12px;
-  background-color: #007bff;
+  background-color: #21d038;
   color: white;
   border: none;
   border-radius: 4px;
@@ -176,5 +237,27 @@ button:disabled {
   color: #28a745;
   font-weight: bold;
   margin-top: 15px;
+}
+
+.buttons{
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: center;
+
+}
+
+.back-button{
+  background-color: rgb(255, 0, 4);
+}
+
+.back-button:hover{
+  background-color: rgb(255, 71, 71) !important;
+}
+
+.validation-error {
+    color: #dc3545;
+    font-size: 0.85em;
+    margin-top: 5px;
 }
 </style>

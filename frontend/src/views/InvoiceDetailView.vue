@@ -4,7 +4,7 @@
       &larr;  Vissza
     </button>
 
-    <h1>Számla megtekintése azonosító alapján: {{ invoice?.id || '...' }}</h1>
+    <h1>Számla részletes megtekintése</h1>
 
     <p v-if="isLoading" class="loading-message">Számla adatok betöltése...</p>
     <p v-else-if="error" class="error-message">{{ error }}</p>
@@ -99,7 +99,7 @@ onMounted(() => {
   max-width: 800px;
   margin: 20px auto;
   padding: 30px;
-  background: #fff;
+  background: #ebeaea;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
