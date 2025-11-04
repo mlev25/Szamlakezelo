@@ -4,7 +4,7 @@
       &larr;  Vissza
     </button>
 
-    <h1>Számla megtekintése #{{ invoice?.id || '...' }}</h1>
+    <h1>Számla megtekintése azonosító alapján: {{ invoice?.id || '...' }}</h1>
 
     <p v-if="isLoading" class="loading-message">Számla adatok betöltése...</p>
     <p v-else-if="error" class="error-message">{{ error }}</p>
@@ -43,7 +43,7 @@
       </div>
 
       <div class="form-group">
-        <label>Komment</label>
+        <label>Megjegyzés</label>
         <textarea :value="invoice.comment" rows="3" readonly></textarea>
       </div>
     </form>

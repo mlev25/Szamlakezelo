@@ -7,6 +7,7 @@ import AdminView from '@/views/AdminView.vue';
 import ForbiddenView from '@/views/ForbiddenView.vue';
 import InvoiceListView from '@/views/InvoiceListView.vue';
 import InvoiceDetailView from '@/views/InvoiceDetailView.vue';
+import InvoiceCreateView from '@/views/InvoiceCreateView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +43,16 @@ const router = createRouter({
       name: 'invoiceList',
       component: InvoiceListView,
       meta: { requiresAuth: true }
+    },
+
+    {
+      path: '/invoices/create',
+      name: 'InvoiceCreate',
+      component: InvoiceCreateView,
+      meta: {
+        requiresAuth: true,
+        roles: ['BOOKKEEPER', 'ADMIN']
+      }
     },
 
     {

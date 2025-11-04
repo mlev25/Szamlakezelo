@@ -6,7 +6,7 @@
       Bejelentkezve mint: <b>{{ authStore.userData?.username || 'N/A' }}</b>
       (Szerepkörök: <b>{{ authStore.userRoles.join(', ') }}</b>)
       <span v-if="authStore.userData?.lastLoginDate"> | Utolsó belépés: {{ formatDate(authStore.userData?.lastLoginDate) }}</span>
-      <span v-else> | Utolsó belépés: N/A</span>
+      <span v-else> | Utolsó belépés: Most vagy Ismeretlen</span>
     </p>
 
     <hr>
@@ -26,11 +26,6 @@
         class="feature-card success">
         <h3>Új Számla Létrehozása</h3>
         <p>Új számla rögzítése a rendszerben (Könyvelő/Admin).</p>
-      </router-link>
-
-      <router-link to="/clients" class="feature-card info" v-if="hasRole('BOOKKEEPER') || hasRole('ADMIN')">
-        <h3>Ügyfelek Kezelése</h3>
-        <p>Ügyfelek karbantartása (Könyvelő/Admin).</p>
       </router-link>
 
       <router-link
