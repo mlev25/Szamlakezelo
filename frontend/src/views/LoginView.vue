@@ -6,7 +6,7 @@
 
       <div class="form-group">
         <label for="username">Felhasználónév</label>
-        <input type="text" id="username" v-model="username" required placeholder="SzepFelhasznalo25">
+        <input type="text" id="username" v-model="username" required placeholder="UjFelhasznalo25">
       </div>
 
       <div class="form-group">
