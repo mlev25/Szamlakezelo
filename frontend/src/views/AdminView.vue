@@ -1,14 +1,19 @@
 <template>
   <div class="admin-container">
-    <h1>Adminisztrációs Panel</h1>
-    <p class="role-info">Csak Adminisztrátorok számára elérhető tartalom.</p>
+    <div class="info">
+      <h1>Adminisztrációs Panel</h1>
+      <button @click="router.back()" class="back-button">
+        &larr;  Vissza
+      </button>
+    </div>
 
-    <h2>Felhasználók Kezelése (Saját jogosultságot és fiókot nem lehet törölni!)</h2>
+
 
     <p v-if="isLoading" class="loading-message">Felhasználói adatok betöltése...</p>
     <p v-else-if="error" class="error-message">{{ error }}</p>
 
     <div v-else class="user-table-wrapper">
+      <h2>Felhasználók Kezelése (Saját jogosultságot és fiókot nem lehet törölni!)</h2>
       <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
 
       <table class="user-table">
@@ -96,9 +101,10 @@
 import { ref, onMounted } from 'vue';
 import apiClient from '@/utils/axios';
 import { useAuthStore } from '@/stores/authStore';
+import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
-
+const router = useRouter();
 const users = ref([]);
 const isLoading = ref(false);
 const error = ref(null);
@@ -348,4 +354,26 @@ onMounted(() => {
 .checkbox-item input[type="checkbox"] {
   width: auto;
 }
+
+.info {
+  width: 66.5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.back-button {
+    background: #30b959;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 25px;
+    transition: background-color 0.3s;
+}
+.back-button:hover {
+    background: #5a6268;
+}
+
 </style>

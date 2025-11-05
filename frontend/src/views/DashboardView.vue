@@ -5,8 +5,10 @@
     <p class="user-info">
       Bejelentkezve mint: <b>{{ authStore.userData?.username || 'N/A' }}</b>
       (Szerepkörök: <b>{{ authStore.userRoles.join(', ') }}</b>)
-      <span v-if="authStore.userData?.lastLoginDate"> | Utolsó belépés: <b>{{ formatDate(authStore.userData?.lastLoginDate) }}</b></span>
-      <span v-else> | Utolsó belépés: Most/Ismeretlen</span>
+    </p>
+    <p class="user-info">
+      <span v-if="authStore.userData?.lastLoginDate"> Utolsó belépés: <b>{{ formatDate(authStore.userData?.lastLoginDate) }}</b></span>
+      <span v-else> Utolsó belépés: Most/Ismeretlen</span>
     </p>
 
     <hr>
