@@ -53,7 +53,7 @@ A projekt futtatásához mind a **Backend (API)**, mind a **Frontend (Weboldal)*
     
 4.  **Megnyitás:** A webes felület a terminálban jelzett címen lesz elérhető (tipikusan **http://localhost:5173/**).
     
-5.  Ha más porton érhető el, feltétlenül hozzá kell adni az **src/main/java/com/szamlakezelo/backend/config/SecurityConfig.java** fájlban található corsConfigurationSource metódus "configuration.setAllowedOrigins(List.of(…)" sorhoz a List.of() -ba a "http://localhost:**jelenlegiport**" linket, hogy a frontendről ne tiltsa le a Spring Security a bejövő kéréseket.
+5.  Ha más porton érhető el, feltétlenül hozzá kell adni az **src/main/java/com/szamlakezelo/backend/config/SecurityConfig.java** fájlban található corsConfigurationSource metódus "configuration.setAllowedOrigins(List.of(…)" sorhoz a List.of() -ba a "http://localhost:jelenlegiport" linket, hogy a frontendről ne tiltsa le a Spring Security a bejövő kéréseket.
     
 
 Kezdő Hitelesítő Adatok a teszteléshez:
@@ -102,3 +102,4 @@ Főbb Funkcionalitások
 *   **Számlák Létrehozása és Listázása.**
     
 *   **Validáció:** Kliens és szerver oldali validáció a pénzügyi adatok integritásának biztosítására (pl. árkorlátok, logikus dátumkezelés).
+
