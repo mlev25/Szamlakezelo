@@ -74,7 +74,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         //ha nem ezen porton valamelyiken indul a frontend, azt is hozza kell adni
-        configuration.setAllowedOrigins(List.of("http://localhost:4000", "http://127.0.0.1:4000", "http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of("http://localhost:4000", "http://127.0.0.1:4000", "http://localhost:5173", "http://127.0.0.1:5173"));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
