@@ -33,7 +33,7 @@ A projekt futtatásához mind a **Backend (API)**, mind a **Frontend (Weboldal)*
     
 4.  **Ellenőrzés:** Az API a **http://localhost:8080** címen érhető el. A H2 beágyazott adatbázis is megtekinthető a **http://localhost:8080/h2-console** címen, **"sa"** felhasználónév, "" (üres) jelszó, **jdbc:h2:mem:szamlakezelo** JDBC URL adatokat megadva.
     
-5.  **Hiba esetén**: Előfordulhat hogy a port nem elérhető, így át kell írni az application.properties fájlban a server.port értékét. Ha ez szükséges, akkor frontend oldalon is az src/utils/axios.js fájlban a baseURL-ben a portot át kell írni az új értékre: “http://localhost:8080/api“ → ”http://localhost:**ujport**/api” .
+5.  **Hiba esetén**: Előfordulhat hogy a port nem elérhető, így át kell írni az application.properties fájlban a server.port értékét. Ha ez szükséges, akkor frontend oldalon is az src/utils/axios.js fájlban a baseURL-ben a portot át kell írni az új értékre: “http://localhost:8080/api“ → ”http://localhost:ujport/api” .
     
 
 ### 2\. Frontend Indítása (Vue + Vite)
@@ -102,4 +102,5 @@ Főbb Funkcionalitások
 *   **Számlák Létrehozása és Listázása.**
     
 *   **Validáció:** Kliens és szerver oldali validáció a pénzügyi adatok integritásának biztosítására (pl. árkorlátok, logikus dátumkezelés).
+
 
