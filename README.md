@@ -2,9 +2,14 @@ Számlakezelő Rendszer
 =====================
 
 Ez a projekt egy webalkalmazás számlák és felhasználók kezelésére. A rendszer a **Spring Boot** és a **Vue 3** nyújtotta funkcionalitásokat ötvözi. Kiemelt figyelmet kapott a szerepköralapú hozzáférés-vezérlés.
+
 **Technológiai áttekintés:**
 
-**Backend: Java Spring Boot - JDK 21Frontend: Vue 3 (Composition API)Adatbázis: H2 in-memory (fejlesztési, tesztelési célú adatbázis), eredetileg Supabase PostgreSQL**
+Backend: Java Spring Boot - JDK 21
+
+Frontend: Vue 3 (Composition API) 
+
+Adatbázis: H2 in-memory (fejlesztési, tesztelési célú adatbázis), eredetileg Supabase PostgreSQL**
 
 **Indítási útmutató:**
 ----------------------
@@ -103,6 +108,7 @@ Főbb Funkcionalitások
 *   **Számlák Létrehozása és Listázása.**
     
 *   **Validáció:** Kliens és szerver oldali validáció a pénzügyi adatok integritásának biztosítására (pl. árkorlátok, logikus dátumkezelés).
+
 
 
 
