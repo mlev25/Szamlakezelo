@@ -238,6 +238,7 @@ onMounted(() => {
   border: 3px solid rgb(101, 100, 100);
   border-radius: 1rem;
   max-width: 1000px;
+  margin-bottom: 20px;
 }
 
 
@@ -356,10 +357,15 @@ onMounted(() => {
 }
 
 .info {
-  width: 66.5%;
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
+    gap: 40px;
+}
+
+.info  h1 {
+  margin-top: 0px;
 }
 
 .back-button {
